@@ -1,22 +1,29 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
+
 import Link from "next/link";
+
 import { menuItems } from "@/utils";
+
 import { MenuItem } from "@/utils/types";
+
 import Button from "../button";
+
 import ThemeToggler from "../theme";
-// import { signIn, signOut, useSession } from "next-auth/react";
+
+import { signIn, signOut, useSession } from "next-auth/react";
+
 // import { usePathname, useRouter } from "next/navigation";
 import { GlobalContext } from "@/context";
 
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
-//   const { data: session } = useSession();
-//   const {setSearchQuery, setSearchResults} = useContext(GlobalContext)
-//   const router = useRouter();
-//   const pathName = usePathname();
+  const { data: session } = useSession();
+  //   const {setSearchQuery, setSearchResults} = useContext(GlobalContext)
+  //   const router = useRouter();
+  //   const pathName = usePathname();
 
   function handleStickyNavbar() {
     if (window.scrollY >= 80) setSticky(true);
@@ -31,24 +38,25 @@ export default function Header() {
     window.addEventListener("scroll", handleStickyNavbar);
   });
 
-//   useEffect(()=> {
-//     setSearchResults([]) 
-//     setSearchQuery('')  
-//   },[pathName])
+  //   useEffect(()=> {
+  //     setSearchResults([])
+  //     setSearchQuery('')
+  //   },[pathName])
 
   return (
     <div>
       <header
         className={`top-0 left-0 z-40 flex w-full items-center bg-transparent
-        ${
-          sticky
+        ${sticky
             ? "!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop:blur-sm !transition dark:!bg-primary dark:!bg-opacity-20"
             : "absolute"
-        }
+          }
         `}
       >
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
+            {/* Start : logo on the left part of header  */}
+
             <div className="w-60 max-w-full px-4 xl:mr-12">
               <Link
                 href={"/"}
@@ -60,13 +68,19 @@ export default function Header() {
               </Link>
             </div>
 
+            {/* End : logo on the left part of header  */}
 
 
-            
+            {/* start:  navigation buttons on the middle part of Header  */}
+
+            <div className="flex w-full items-center justify-between px-4">
 
 
- <div className="flex w-full items-center justify-between px-4">
+
               <div>
+
+                {/* Start : menu button for mobile screen  */}
+
                 <button
                   onClick={handleNavbarToggle}
                   id="navbarToggler"
@@ -89,19 +103,28 @@ export default function Header() {
                         `}
                   />
                 </button>
+
+                {/* End : menu button for mobile screen  */}
+
+
+
                 <nav
                   id="navbarCollapse"
                   className={`absolute right-0 z-30 w-[250px] rounded border-[.5px] bg-white border-body-color/50 py-4 
                 px-6 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100
 
-                ${
-                  navbarOpen
-                    ? "visible top-full opacity-100"
-                    : "invisible top-[120%] opacity-0"
-                }
+                ${navbarOpen
+                      ? "visible top-full opacity-100"
+                      : "invisible top-[120%] opacity-0"
+                    }
                 `}
                 >
+
+
+
                   <ul className="block lg:flex lg:space-x-12">
+
+
                     {menuItems.map((item: MenuItem) => (
                       <li key={item.id} className="group relative">
                         <Link
@@ -112,32 +135,56 @@ export default function Header() {
                         </Link>
                       </li>
                     ))}
+
+
                   </ul>
+
+
                 </nav>
               </div>
 
+              {/*End :  navigation buttons on the middle part of Header  */}
 
-              {/* ///////// create ,login/logout ,theme button */}
+
+              {/* //////////////////////////////////////////// */}
+
+              {/* Start :  create ,{login/logout} ,theme button on the right side of navbar  */}
+
+              <div className="flex gap-4 items-center justify-end pr-16 lg:pr-0">
 
 
-              
-             <div className="flex gap-4 items-center justify-end pr-16 lg:pr-0">
-                
-                  <Button
-                     onClick={() => {}}
-                    text="Create"
-                  />
+                {session !== null ? (
+                  <Button onClick={() => { }} text="Create" />
+                ) : null}
 
-                 <Button
-                      onClick={() => {}}
-                    text="Login"
-                  />
+
+
+                <Button
+                  onClick={
+                    session !== null
+                      ? () => {
+                        signOut();
+                      }
+                      : () => {
+                        signIn("github");
+                      }
+                  }
+                  text={session !== null ? "Logout" : "Login"}
+                />
 
                 <div className="flex gap-3 items-center">
                   <ThemeToggler />
                 </div>
-              </div> 
-            </div> 
+              </div>
+
+              {/* End  :  create ,{login/logout} ,theme button on the right side of navbar  */}
+
+
+
+
+
+              
+            </div>
           </div>
         </div>
       </header>

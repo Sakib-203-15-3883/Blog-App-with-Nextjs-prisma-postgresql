@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="dark:bg-black">
+      <body className="dark:dark grey">
         <NextThemeProvider>
           <NextAuthProvider>
             <GlobalState>

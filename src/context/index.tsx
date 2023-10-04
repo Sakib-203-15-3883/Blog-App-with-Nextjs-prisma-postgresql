@@ -13,7 +13,8 @@ import {
 
 
 import { useSession } from "next-auth/react";
-// import Spinner from "@/components/spinner";
+
+import Spinner from "@/components/spinner";
 // import { Blog, BlogFormData } from "@/utils/types";
 // import { initialBlogFormData } from "@/utils";
 // import { usePathname, useRouter } from "next/navigation";
@@ -68,11 +69,11 @@ export default function GlobalState({ children }: { children: ReactNode }) {
 //   const [formData, setFormData] = useState(initialBlogFormData);
 //   const [searchQuery, setSearchQuery] = useState("");
 //   const [searchResults, setSearchResults] = useState<Blog[]>([]);
-//   const { data: session } = useSession();
+  const { data: session } = useSession();
 //   const pathname = usePathname();
 //   const router = useRouter();
 
-//   if (session === undefined) return <Spinner />;
+  if (session === undefined) return <Spinner />;
 
 //   if (session === null && pathname === "/create") router.push("/");
 
