@@ -1,8 +1,84 @@
 "use client";
 
-import { formControls } from "@/utils";
+import Button from "@/components/button";
+import Spinner from "@/components/spinner";
+import { GlobalContext } from "@/context";
+import { firebaseConfig, formControls, initialBlogFormData } from "@/utils";
+import { BlogFormData } from "@/utils/types";
+import { initializeApp } from "firebase/app";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useState } from "react";
+
+const app = initializeApp(firebaseConfig);
+const stroage = getStorage(app, "gs://blog-app-2023-8fd9a.appspot.com/");
+
+
+
+function createUniqueFileName(fileName: string) {
+  const timeStamp = Date.now();
+  const randomString = Math.random().toString(36).substring(2, 12);
+
+  return `${fileName}-${timeStamp}-${randomString}`;
+}
+
+
 
 export default function Create() {
+  const { formData, setFormData } = useContext(GlobalContext);
+
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
+
+
+
+  async function handleImageSaveToFireBase(file: any) {
+    const extractUniqueFileName = createUniqueFileName(file?.name);
+    const stroageRef = ref(stroage, `blog/${extractUniqueFileName}`);
+    const uploadImg = uploadBytesResumable(stroageRef, file);
+  
+    return new Promise((resolve, reject) => {
+      uploadImg.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => reject(error),
+        () => {
+          getDownloadURL(uploadImg.snapshot.ref)
+            .then((url) => resolve(url))
+            .catch((error) => reject(error));
+        }
+      );
+    });
+  }
+
+
+  async function handleBlogImageChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    if (!event.target.files) return;
+    setImageLoading(true);
+    const saveImageToFirebase: any = await handleImageSaveToFireBase(
+      event.target.files[0]
+    );
+
+    if (saveImageToFirebase !== "") {
+      setImageLoading(false);
+      console.log(saveImageToFirebase, "saveImageToFirebase");
+      setFormData({
+        ...formData,
+        image: saveImageToFirebase,
+      });
+    }
+  }
+
+
+
+
   return (
     <section className="overflow-hidden py-16 md:py-20 lg:py-28">
       <div className="container">
@@ -20,9 +96,9 @@ export default function Create() {
 
               <div>
                 <div className="flex flex-col gap-3">
-                  <div className="flex gap-3">
-                    <div>
-                      {/* className={`${imageLoading ? "w-1/2" : "w-full"}`} */}
+                  <div className="flex flex-col gap-3 ">
+                    <div  className={`${imageLoading ? "w-1/2" : "w-full"}`}>
+                     
 
                       <label className="mb-3 block text-sm font-medium text-dark dark:text-white">
                         Upload Blog Image
@@ -32,18 +108,18 @@ export default function Create() {
                         id="fileinput"
                         accept="image/*"
                         max={1000000}
-                        // onChange={handleBlogImageChange}
+                         onChange={handleBlogImageChange}
                         type="file"
                         className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                       />
                     </div>
 
 
-                    {/* {imageLoading ? (
+                    {imageLoading ? (
                       <div className="w-1/2">
                         <Spinner />
                       </div>
-                    ) : null} */}
+                    ) : null}
 
 
 
@@ -66,7 +142,20 @@ export default function Create() {
                           <input type={control.type}
                           name={control.id}
                           placeholder={control.placeholder}
-                          className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"/> 
+                          className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+
+                          value={formData[control.id as keyof BlogFormData]}
+
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setFormData({
+                              ...formData,
+                              [control.id]: event.target.value,
+                            });
+                          }}
+                          
+                          /> 
                           
                           : 
                           
@@ -75,7 +164,20 @@ export default function Create() {
 
 
                           <textarea placeholder={control.placeholder}
-                          rows={5} name={control.id} className="w-full resize-none rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp" />
+                          rows={5} name={control.id} className="w-full resize-none rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp" 
+
+                          onChange={(
+                            event: React.ChangeEvent<HTMLTextAreaElement>
+                          ) => {
+                            setFormData({
+                              ...formData,
+                              [control.id]: event.target.value,
+                            });
+                          }}
+
+                          value={formData[control.id as keyof BlogFormData]}
+                          
+                          />
                           
                           
                           
@@ -86,9 +188,23 @@ export default function Create() {
 
                           control.component ==='select' ?
                           
-                          <select name={control.id}
-                          placeholder={control.placeholder}
-                          className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                          <select
+                            name={control.id}
+                            placeholder={control.placeholder}
+                            value={formData[control.id as keyof BlogFormData]}
+                            
+
+                            onChange={(
+                              event: React.ChangeEvent<HTMLSelectElement>
+                            ) => {
+                              setFormData({
+                                ...formData,
+                                [control.id]: event.target.value,
+                              });
+                            }}
+                            
+                            
+                            className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                           >
 
 
@@ -96,21 +212,16 @@ export default function Create() {
                               Select
                             </option>
 
-                            {
-                              control.options.map((optionItem) => (
-                                <option
-                                  id={optionItem.value}
-                                  value={optionItem.value}
-                                >
-                                  {/* {optionItem.label} */}
-                                </option>
-                              ))
+                            {control.options.map((optionItem) => (
+                              <option
+                                id={optionItem.value}
+                                value={optionItem.value}
+                              >
+                                {optionItem.label}
+                              </option>
+                            ))}
 
-
-                            }
-
-
-
+                            
                           </select>
                           
                           
@@ -124,10 +235,20 @@ export default function Create() {
                       ))}
 
 
+                      <div className="w-full px-4">
+
+                      <Button
+                        text="Create New Blog"
+                        onClick={()=>{}}
+                      />
+
+                      </div>
 
 
 
-                      
+
+
+
                     </div>
                   </div>
                 </div>

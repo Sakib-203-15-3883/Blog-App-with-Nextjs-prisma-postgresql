@@ -15,9 +15,9 @@ import {
 import { useSession } from "next-auth/react";
 
 import Spinner from "@/components/spinner";
-// import { Blog, BlogFormData } from "@/utils/types";
-// import { initialBlogFormData } from "@/utils";
-// import { usePathname, useRouter } from "next/navigation";
+import { Blog, BlogFormData } from "@/utils/types";
+import { initialBlogFormData } from "@/utils";
+import { usePathname, useRouter } from "next/navigation";
 
 
 
@@ -27,8 +27,8 @@ import Spinner from "@/components/spinner";
 type ContextType = {
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
-//   formData: BlogFormData;
-//   setFormData: Dispatch<SetStateAction<BlogFormData>>;
+  formData: BlogFormData;
+  setFormData: Dispatch<SetStateAction<BlogFormData>>;
 //   searchQuery: string;
 //   setSearchQuery: Dispatch<SetStateAction<string>>;
 //   searchResults: Blog[];
@@ -42,8 +42,8 @@ type ContextType = {
 const initialState = {
   loading: false,
   setLoading: () => {},
-//   formData: initialBlogFormData,
-//   setFormData: () => {},
+  formData: initialBlogFormData,
+  setFormData: () => {},
 //   searchQuery: "",
 //   setSearchQuery: () => {},
 //   searchResults: [],
@@ -66,7 +66,7 @@ export const GlobalContext = createContext<ContextType>(initialState);
 export default function GlobalState({ children }: { children: ReactNode }) {
 
   const [loading, setLoading] = useState(false);
-//   const [formData, setFormData] = useState(initialBlogFormData);
+  const [formData, setFormData] = useState(initialBlogFormData);
 //   const [searchQuery, setSearchQuery] = useState("");
 //   const [searchResults, setSearchResults] = useState<Blog[]>([]);
   const { data: session } = useSession();
@@ -82,8 +82,8 @@ export default function GlobalState({ children }: { children: ReactNode }) {
       value={{
         loading,
         setLoading,
-        // formData,
-        // setFormData,
+        formData,
+        setFormData,
         // searchQuery,
         // setSearchQuery,
         // searchResults,
