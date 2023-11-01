@@ -14,15 +14,17 @@ import ThemeToggler from "../theme";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 
-// import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { GlobalContext } from "@/context";
 
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
+
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
+  
   const { data: session } = useSession();
   //   const {setSearchQuery, setSearchResults} = useContext(GlobalContext)
-  //   const router = useRouter();
+    const router = useRouter();
   //   const pathName = usePathname();
 
   function handleStickyNavbar() {
@@ -154,7 +156,7 @@ export default function Header() {
 
 
                 {session !== null ? (
-                  <Button onClick={() => { }} text="Create" />
+                  <Button onClick={() => router.push("/create")} text="Create" />
                 ) : null}
 
 

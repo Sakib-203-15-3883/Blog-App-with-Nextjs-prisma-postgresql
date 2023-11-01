@@ -8,11 +8,7 @@ export default function ThemeToggler() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}     >
-
-
-
-
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
 
       
         {

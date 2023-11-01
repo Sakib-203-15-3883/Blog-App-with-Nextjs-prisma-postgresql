@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 export default function Home() {
-
   return (
     <>
       <section className="relative z-10 overflow-hidden pt-[120px] pb-16 md:pt-[150px] md:pb-[120px] xl:pt-[180px] xl:pb-[160px] 2xl:pt-[210px] 2xl:pb-[200px]">
@@ -25,16 +24,12 @@ export default function Home() {
                   href={"/blogs"}
                 >
                   Explore All Blogs
-                  
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-
-
 
       <section className="relative z-10 overflow-hidden pt-[120px] pb-16 md:pt-[150px] md:pb-[120px] xl:pt-[180px] xl:pb-[160px] 2xl:pt-[210px] 2xl:pb-[200px]">
         <div className="container">
@@ -57,16 +52,12 @@ export default function Home() {
                   href={"/blogs"}
                 >
                   Explore All Blogs
-                  
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-
-
 
       <section className="relative z-10 overflow-hidden pt-[120px] pb-16 md:pt-[150px] md:pb-[120px] xl:pt-[180px] xl:pb-[160px] 2xl:pt-[210px] 2xl:pb-[200px]">
         <div className="container">
@@ -89,19 +80,12 @@ export default function Home() {
                   href={"/blogs"}
                 >
                   Explore All Blogs
-                  
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
     </>
-
-
-
-
-
   );
 }
