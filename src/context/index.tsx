@@ -70,12 +70,12 @@ export default function GlobalState({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Blog[]>([]);
   const { data: session } = useSession();
-//   const pathname = usePathname();
-//   const router = useRouter();
+  const pathname = usePathname();
+  const router = useRouter();
 
   if (session === undefined) return <Spinner />;
 
-//   if (session === null && pathname === "/create") router.push("/");
+  if (session === null && pathname === "/create") router.push("/");
 
   return (
     <GlobalContext.Provider

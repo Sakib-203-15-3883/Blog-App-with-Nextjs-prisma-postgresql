@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function Search() {
-
   const { searchResults, setSearchQuery, setSearchResults, searchQuery } =
     useContext(GlobalContext);
 
@@ -49,7 +48,6 @@ export default function Search() {
   return (
     <section className="overflow-hidden py-16 md:py-20 lg:py-28">
       <div className="container">
-        
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
             <div className="mb-12 rounded-md bg-primary/[3%] py-11 px-8 dark:bg-dark sm:p-[50px] lg:mb-5 lg:px-8 xl:p-[55px]">
