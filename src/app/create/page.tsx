@@ -21,6 +21,8 @@ const stroage = getStorage(app, "gs://blog-app-2023-8fd9a.appspot.com/");
 
 
 
+
+
 function createUniqueFileName(fileName: string) {
   const timeStamp = Date.now();
   const randomString = Math.random().toString(36).substring(2, 12);
@@ -33,7 +35,13 @@ function createUniqueFileName(fileName: string) {
 export default function Create() {
   const { formData, setFormData } = useContext(GlobalContext);
 
+
   const [imageLoading, setImageLoading] = useState<boolean>(false);
+
+    const {data : session}= useSession();
+    console.log(session,'session');
+
+    const router = useRouter();
 
 
 
@@ -76,7 +84,33 @@ export default function Create() {
     }
   }
 
+  async function handleSaveBlogPost() {
+    console.log(formData);
 
+    const res = await fetch("/api/blog-post/add-post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        userid: session?.user?.name,
+        userimage: session?.user?.image,
+        comments: [],
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log(data, "data123");
+
+    if (data && data.success) {
+      setFormData(initialBlogFormData)
+      router.push("/blogs");
+    }
+  }
+
+  console.log(formData, "formData");
 
 
   return (
@@ -92,7 +126,7 @@ export default function Create() {
                 Create Your Own Blog Post
               </h2>
 
-             {/* Upload  */}
+             {/* upload image  */}
 
               <div>
                 <div className="flex flex-col gap-3">
@@ -239,7 +273,7 @@ export default function Create() {
 
                       <Button
                         text="Create New Blog"
-                        onClick={()=>{}}
+                        onClick={handleSaveBlogPost}
                       />
 
                       </div>
