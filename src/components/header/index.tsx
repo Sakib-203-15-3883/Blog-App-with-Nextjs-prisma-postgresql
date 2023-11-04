@@ -23,9 +23,9 @@ export default function Header() {
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
   
   const { data: session } = useSession();
-  //   const {setSearchQuery, setSearchResults} = useContext(GlobalContext)
+    const {setSearchQuery, setSearchResults} = useContext(GlobalContext)
     const router = useRouter();
-  //   const pathName = usePathname();
+    const pathName = usePathname();
 
   function handleStickyNavbar() {
     if (window.scrollY >= 80) setSticky(true);
@@ -40,10 +40,10 @@ export default function Header() {
     window.addEventListener("scroll", handleStickyNavbar);
   });
 
-  //   useEffect(()=> {
-  //     setSearchResults([])
-  //     setSearchQuery('')
-  //   },[pathName])
+    useEffect(()=> {
+      setSearchResults([])
+      setSearchQuery('')
+    },[pathName])
 
   return (
     <div>
@@ -66,7 +66,7 @@ export default function Header() {
                     ${sticky ? "py-5 lg:py-2" : "py-8"}
                     `}
               >
-                NextBlog
+                TechNexus
               </Link>
             </div>
 
